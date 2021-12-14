@@ -1,9 +1,15 @@
+import 'package:aldo_shop/models/user_models.dart';
+import 'package:aldo_shop/providers/auth_provider.dart';
 import 'package:aldo_shop/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    UserModel user = authProvider.user;
+
     Widget nameInput() {
       return Container(
         margin: EdgeInsets.only(top: 30),
@@ -17,16 +23,11 @@ class EditProfilePage extends StatelessWidget {
               ),
             ),
             TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Aldodevv',
-                hintStyle: primaryTextStyle,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: subtitleColor
-                  )
-                )
-              )
-            )
+                decoration: InputDecoration(
+                    hintText: user.name,
+                    hintStyle: primaryTextStyle,
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: subtitleColor))))
           ],
         ),
       );
@@ -45,22 +46,16 @@ class EditProfilePage extends StatelessWidget {
               ),
             ),
             TextFormField(
-              decoration: InputDecoration(
-                hintText: '@aldodevv',
-                hintStyle: primaryTextStyle,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: subtitleColor
-                  )
-                )
-              )
-            )
+                decoration: InputDecoration(
+                    hintText: '@${user.username}',
+                    hintStyle: primaryTextStyle,
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: subtitleColor))))
           ],
         ),
       );
     }
 
-    
     Widget emailInput() {
       return Container(
         margin: EdgeInsets.only(top: 30),
@@ -74,16 +69,11 @@ class EditProfilePage extends StatelessWidget {
               ),
             ),
             TextFormField(
-              decoration: InputDecoration(
-                hintText: 'aldodevv@gmail.com',
-                hintStyle: primaryTextStyle,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: subtitleColor
-                  )
-                )
-              )
-            )
+                decoration: InputDecoration(
+                    hintText: user.email,
+                    hintStyle: primaryTextStyle,
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: subtitleColor))))
           ],
         ),
       );
@@ -103,7 +93,8 @@ class EditProfilePage extends StatelessWidget {
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                      image: AssetImage('assets/image_profile.png'))),
+                      fit: BoxFit.fill,
+                      image: NetworkImage('${user.profilePhotoUrl}'))),
             ),
             nameInput(),
             usernameInput(),

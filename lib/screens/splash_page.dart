@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:aldo_shop/providers/product_provider.dart';
 import 'package:aldo_shop/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -13,7 +15,12 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     // TODO: implement initState
 
-    Timer(Duration(seconds: 3), () => Navigator.pushNamed(context, '/sign-in'));
+    getInit() async {
+      await Provider.of<productProvider>(context, listen: false).getProducts();
+      Navigator.pushNamed(context, '/sign-in');
+    }
+
+    getInit();
     super.initState();
   }
 

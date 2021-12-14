@@ -1,10 +1,15 @@
+import 'package:aldo_shop/providers/wishlist_product.dart';
 import 'package:aldo_shop/theme.dart';
 import 'package:aldo_shop/widgets/wishlist_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WishlistPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
+
     Widget header() {
       return AppBar(
         backgroundColor: backgroundColor1,
@@ -76,11 +81,7 @@ class WishlistPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(
               horizontal: defaultMargin
             ),
-            children: [
-              WishlistCard(),
-              WishlistCard(),
-              WishlistCard(),
-            ],
+            children: wishlistProvider.wishlist.map((e) => WishlistCard(e)).toList(),
           ),
         )
       );
@@ -89,7 +90,8 @@ class WishlistPage extends StatelessWidget {
     return Column(
       children: [
         header(), 
-        content()
+        content(),
+        wishlistProvider.wishlist.length == 0 ? emptyWishlist() : content()
         // emptyWishlist()
       ],
     );

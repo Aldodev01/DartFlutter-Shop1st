@@ -1,9 +1,16 @@
+import 'package:aldo_shop/models/user_models.dart';
+import 'package:aldo_shop/providers/auth_provider.dart';
 import 'package:aldo_shop/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    UserModel user = authProvider.user;
+
+
     Widget header() {
       return AppBar(
         backgroundColor: backgroundColor1,
@@ -15,8 +22,8 @@ class ProfilePage extends StatelessWidget {
             child: Row(
               children: [
                 ClipOval(
-                  child: Image.asset(
-                    'assets/image_profile.png',
+                  child: Image.network(
+                    '${user.profilePhotoUrl}',
                     width: 64,
                   ),
                 ),
@@ -28,12 +35,12 @@ class ProfilePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hallo Aldo',
+                      'Hallo ${user.name}',
                       style: primaryTextStyle.copyWith(
                           fontSize: 24, fontWeight: semiBold),
                     ),
                     Text(
-                      '@aldokun',
+                      '@${user.username}',
                       style: subtitleTextStyle.copyWith(fontSize: 16),
                     )
                   ],

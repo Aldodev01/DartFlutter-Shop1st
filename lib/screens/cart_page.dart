@@ -1,10 +1,14 @@
+import 'package:aldo_shop/providers/cart_provider.dart';
 import 'package:aldo_shop/widgets/cart_card.dart';
 import 'package:flutter/material.dart';
 import 'package:aldo_shop/theme.dart';
+import 'package:provider/provider.dart';
 
 class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+
     Widget emptyCart() {
       return Center(
         child: Column(
@@ -56,7 +60,7 @@ class CartPage extends StatelessWidget {
     Widget content() {
       return ListView(
         padding: EdgeInsets.symmetric(horizontal: defaultMargin),
-        children: [CartCard()],
+        children: cartProvider.carts.map((cart) => CartCard(cart)).toList(),
       );
     }
 
@@ -77,7 +81,7 @@ class CartPage extends StatelessWidget {
                     style: primaryTextStyle,
                   ),
                   Text(
-                    "\$287,12",
+                    "\$${cartProvider.totalPrice()}", 
                     style: priceTextStyle.copyWith(
                         fontSize: 16, fontWeight: semiBold),
                   )
@@ -135,8 +139,8 @@ class CartPage extends StatelessWidget {
         ),
         elevation: 0,
       ),
-      body: content(),
-      bottomNavigationBar: customButtonNav(),
+      body: cartProvider.carts.length == 0 ? emptyCart()  :  content() ,
+      bottomNavigationBar: cartProvider.carts.length == 0 ? SizedBox() : customButtonNav(),
     );
   }
 }

@@ -1,11 +1,19 @@
+import 'package:aldo_shop/models/user_models.dart';
+import 'package:aldo_shop/providers/auth_provider.dart';
+import 'package:aldo_shop/providers/product_provider.dart';
 import 'package:aldo_shop/theme.dart';
 import 'package:aldo_shop/widgets/product_card.dart';
 import 'package:aldo_shop/widgets/product_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    UserModel user = authProvider.user;
+    productProvider ProductProvider = Provider.of<productProvider>(context);
+
     Widget header() {
       return Container(
         margin: EdgeInsets.only(
@@ -20,12 +28,12 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Hallo Aldo",
+                    "Hallo ${user.name}",
                     style: primaryTextStyle.copyWith(
                         fontSize: 24, fontWeight: semiBold),
                   ),
                   Text(
-                    '@aldodevv',
+                    '@${user.username}',
                     style: subtitleTextStyle.copyWith(fontSize: 16),
                   )
                 ],
@@ -37,7 +45,7 @@ class HomePage extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                    image: AssetImage('assets/image_profile.png')),
+                    image: NetworkImage('${user.profilePhotoUrl}')),
               ),
             )
           ],
@@ -172,11 +180,7 @@ class HomePage extends StatelessWidget {
                 width: defaultMargin,
               ),
               Row(
-                children: [
-                  ProductCard(),
-                  ProductCard(),
-                  ProductCard(),
-                ],
+                children: ProductProvider.products.map((product) => ProductCard(product)).toList(),
               )
             ],
           ),
@@ -203,17 +207,9 @@ class HomePage extends StatelessWidget {
 
     Widget newArrivals() {
       return Container(
-        margin: EdgeInsets.only(
-          top: 14
-        ),
+        margin: EdgeInsets.only(top: 14),
         child: Column(
-          children: [
-            ProductTile(),
-            ProductTile(),
-            ProductTile(),
-            ProductTile(),
-
-          ],
+          children: ProductProvider.products.map((product) => ProductTile(product)).toList(),
         ),
       );
     }

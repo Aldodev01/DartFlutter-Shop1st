@@ -1,12 +1,22 @@
+import 'package:aldo_shop/models/product_model.dart';
+import 'package:aldo_shop/screens/product_page.dart';
 import 'package:aldo_shop/theme.dart';
 import 'package:flutter/material.dart';
 
 class ProductTile extends StatelessWidget {
+
+  final ProductModel product;
+  ProductTile(this.product);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/product');
+       Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductPage(product),
+          ),
+        );
       },
       child: Container(
         margin: EdgeInsets.only(
@@ -30,7 +40,7 @@ class ProductTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Football',
+                  '${product.category?.name}',
                   style: secondaryTextStyle.copyWith(
                     fontSize: 12,
                   ),
@@ -39,15 +49,16 @@ class ProductTile extends StatelessWidget {
                   height: 6,
                 ),
                 Text(
-                  'Predator 20.3 Firm Ground',
+                  '${product.name}',
                   style: primaryTextStyle.copyWith(
                       fontSize: 16, fontWeight: semiBold),
+                      maxLines: 1,
                 ),
                 SizedBox(
                   height: 6,
                 ),
                 Text(
-                  '\$68.12',
+                  '\$${product.price}',
                   style: priceTextStyle.copyWith(fontWeight: medium),
                 )
               ],

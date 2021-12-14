@@ -1,30 +1,51 @@
 import 'package:aldo_shop/providers/auth_provider.dart';
 import 'package:aldo_shop/theme.dart';
+import 'package:aldo_shop/widgets/loading_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
   TextEditingController nameController = TextEditingController(text: '');
   TextEditingController usernameController = TextEditingController(text: '');
   TextEditingController emailController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
 
+  bool? isLoading = false;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
     handleSignUp() async {
+      setState(() {
+        isLoading = true;
+      });
       if (await authProvider.register(
         name: nameController.text,
         username: usernameController.text,
         email: emailController.text,
         password: passwordController.text,
       )) {
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushNamed(context, '/sign-in');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: alertColor,
+            content: Text(
+              "Gagal Register !",
+              textAlign: TextAlign.center,
+            )));
       }
+      setState(() {
+        isLoading = false;
+      });
     }
 
-   Widget header() {
+    Widget header() {
       return Container(
         margin: EdgeInsets.only(top: 30),
         child: Column(
@@ -333,7 +354,7 @@ class SignUpPage extends StatelessWidget {
                 usernameInput(),
                 emailInput(),
                 PasswordInput(),
-                signUpButton(),
+                isLoading == true ? LoadingButton() : signUpButton(),
                 Spacer(),
                 footer()
               ],

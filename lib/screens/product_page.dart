@@ -1,8 +1,15 @@
+import 'package:aldo_shop/models/product_model.dart';
+import 'package:aldo_shop/providers/cart_provider.dart';
+import 'package:aldo_shop/providers/wishlist_product.dart';
 import 'package:aldo_shop/theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductPage extends StatefulWidget {
+  final ProductModel product;
+  ProductPage(this.product);
+
   @override
   _ProductPageState createState() => _ProductPageState();
 }
@@ -27,11 +34,13 @@ class _ProductPageState extends State<ProductPage> {
   ];
 
   int currentIndex = 0;
-  bool isWishlist = false;
 
   @override
   Widget build(BuildContext context) {
-    Future<void> showSuccessDialog() async {
+    WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+
+     Future<void> showSuccessDialog() async {
       return showDialog(
           context: context,
           builder: (BuildContext context) => Container(
@@ -78,20 +87,19 @@ class _ProductPageState extends State<ProductPage> {
                           width: 154,
                           height: 44,
                           child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)
+                              style: TextButton.styleFrom(
+                                backgroundColor: primaryColor,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
                               ),
-                            ),
-                            onPressed: () {},
-                            child: Text(
-                              "View My Cart",
-                              style: primaryTextStyle.copyWith(
-                                fontSize: 16,
-                                fontWeight: medium
-                              ),
-                            )                          ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/cart');
+                              },
+                              child: Text(
+                                "View My Cart",
+                                style: primaryTextStyle.copyWith(
+                                    fontSize: 16, fontWeight: medium),
+                              )),
                         )
                       ],
                     ),
@@ -218,10 +226,8 @@ class _ProductPageState extends State<ProductPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      setState(() {
-                        isWishlist = !isWishlist;
-                      });
-                      if (isWishlist) {
+                      wishlistProvider.setProduct(widget.product);
+                      if (wishlistProvider.isWishlist(widget.product)) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: secondaryColor,
                             content: Text(
@@ -238,7 +244,7 @@ class _ProductPageState extends State<ProductPage> {
                       }
                     },
                     child: Image.asset(
-                      isWishlist
+                      wishlistProvider.isWishlist(widget.product)
                           ? "assets/button_wishlist_blue.png"
                           : 'assets/button_wishlist.png',
                       width: 46,
@@ -346,7 +352,7 @@ class _ProductPageState extends State<ProductPage> {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Navigator.pushNamed(context, '/detail-chat');
                     },
                     child: Container(
@@ -365,6 +371,7 @@ class _ProductPageState extends State<ProductPage> {
                       height: 54,
                       child: TextButton(
                           onPressed: () {
+                            cartProvider.addCart(widget.product);
                             showSuccessDialog();
                           },
                           style: TextButton.styleFrom(

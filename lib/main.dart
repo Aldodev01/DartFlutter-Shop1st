@@ -1,4 +1,8 @@
 import 'package:aldo_shop/providers/auth_provider.dart';
+import 'package:aldo_shop/providers/cart_provider.dart';
+import 'package:aldo_shop/providers/product_provider.dart';
+import 'package:aldo_shop/providers/transaction_provider.dart';
+import 'package:aldo_shop/providers/wishlist_product.dart';
 import 'package:aldo_shop/screens/cart_page.dart';
 import 'package:aldo_shop/screens/checkout_page.dart';
 import 'package:aldo_shop/screens/checkout_success_page.dart';
@@ -21,7 +25,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthProvider(),)
+        ChangeNotifierProvider(create: (context) => AuthProvider(),),
+        ChangeNotifierProvider(create: (context) => productProvider()),
+        ChangeNotifierProvider(create: (context) => WishlistProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => TransactionProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -32,7 +40,7 @@ class MyApp extends StatelessWidget {
           '/home': (context) => MainPage(),
           '/detail-chat': (context) => DetailChatPage(),
           '/edit-profile': (context) => EditProfilePage(),
-          '/product': (context) => ProductPage(),
+          // '/product': (context) => ProductPage(),
           '/cart': (context) => CartPage(),
           '/checkout': (context) => CheckoutPage(),
           '/checkout-success': (context) => CheckoutSuccessPage()
